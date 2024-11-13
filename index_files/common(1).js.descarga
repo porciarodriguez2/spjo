@@ -1,0 +1,666 @@
+jQuery(document).ready(function ($) {
+	jQuery( "#tabs" ).tabs();
+	jQuery(".left-side").mCustomScrollbar();
+	jQuery('.show-text').hide();
+	jQuery('.blog-item .learn-more').click(function (event) {
+        event.preventDefault();
+        jQuerythis = jQuery(this);
+        jQuerythis.closest('.blog-item').find('.show-text').slideToggle('slow');
+        jQuerythis.text(jQuerythis.text() == 'Read less -' ? 'Read more +' : 'Read less -');
+    });
+
+	jQuery('.form-content label#label-1').click(function() {
+		//alert(3);
+
+     jQuery('#input-1').focus();
+});
+
+		jQuery('input, textarea') .focus(function () {
+	jQuery(this).siblings('label, .validation_message') .hide();
+	jQuery(this) .parent('.ginput_container') .siblings('label, .validation_message') .hide();
+	}) .blur(function () {
+	  if (!jQuery(this) .val()) {
+		jQuery(this) .parent('.ginput_container') .siblings('label') .show();
+		jQuery(this) .siblings('label') .show();
+	  }
+	});
+	jQuery('input, textarea').each(function(){
+		if (jQuery(this).parent('.ginput_container').parent('li').hasClass('gfield_error')) {
+			jQuery(this).val('');
+			jQuery(this).parent('.ginput_container') .siblings('label') .show();
+		}
+		if(jQuery(this).val()){
+			jQuery(this).parent('.ginput_container') .siblings('label') .hide();
+		}
+	})
+	 jQuery('.svg-bar').click(function(){
+		jQuery('.svg-bar').toggleClass('close-toggle');
+		jQuery('.nav-bar').slideToggle('slow');
+			});
+			jQuery( "#s" ).hover(
+		function(){
+		jQuery( this ).stop().animate({width: 150}, 500 ).css("opacity", "1");;
+	  },
+		function(){
+		jQuery( this ).stop().animate({width: 28}, 500);
+	  }
+	);
+
+	if(jQuery(window).width() > 1024){
+
+   	jQuery(window).scroll(function(){
+
+   	  var sticky = jQuery('.top-fixed'),
+
+   		  scroll = jQuery(window).scrollTop();
+
+   	  if (scroll >= 50) sticky.addClass('fixed-bar');
+
+   	  else sticky.removeClass('fixed-bar');
+
+   	});
+
+   	}
+	jQuery('#faq .content').hide();
+jQuery('#faq h3').click(function(){
+		jQuery(this).toggleClass('active');
+    jQuery(this).next().slideToggle();
+});
+jQuery(".form-content .btn").click(function(){
+	if(!document.getElementById("home").checked && !document.getElementById("office").checked)
+	{
+		alert("Please select a delivery location.");
+		return false;
+	}
+	theZip = document.getElementById("input-1").value;
+	if(!DeliverableZip(theZip)){
+		document.getElementById("Non-Deliverable-Zip").innerHTML = theZip;
+		jQuery(".pop-up-fixed").show();
+	}else{
+			window.location.href= "select-water/?zip=" + theZip + "&DelType=" + document.querySelector('input[name="delivery"]:checked').value;
+			//DoTheseThings~~~;
+	}
+});
+jQuery(".close-btn").click(function(){
+    jQuery(".pop-up-fixed").hide();
+});
+
+jQuery('.close-cart').click(function(){
+    //Remove Item;
+	prodID = document.getElementById("ModifyProdID").value;
+	if(confirm("Are you sure you wish to remove this product?"))
+		window.location.href = '?prodID=' + prodID + '&qty=0';
+	//jQuery(this).parent('.table-row').fadeOut('slow');
+
+});
+
+var timeout;
+jQuery('.product-cart-btn button').click(function () {
+jQuery(this).html('Adding to cart <img src="http://dev1.bluecoronaclients.com/waterboy/wp-content/uploads/2016/07/fbloader.gif"/>');
+//var timeout = setTimeout(replaceimg, 4000);
+
+});
+
+function replaceimg() {
+	jQuery('img').remove();
+  jQuery('.product-cart-btn button').text('Add');
+
+}
+
+function OnSuccess(){}
+function OnError(){alert("error.");}
+
+});
+
+var Charlotte_Zips = ['33927','33938','33946','33947','33948','33949','33950','33951','33952','33953','33954','33955','33980','33981','33982','33983','34224'];
+var Collier_Zips = ['34101','34102','34103','34104','34105','34106','34107','34108','34109','34110','34112','34113','34114','34116','34117','34119','34120','34137','34138','34139','34140','34142','34143','34145','34146'];
+var Desoto_Zips = ['34265','34266','34267','34268','34269'];
+var Hernando_Zips = ['34601','34602','34603','34604','34605','34607','34608','34609','34611'];
+var Hillsborough_Zips = ['33503','33508','33509','33510','33511','33527','33534','33548','33549','33550','33556','33558','33559','33563','33564','33565','33566','33567','33568','33569','33570','33571','33572','33573','33575','33583','33584','33586','33587','33592','33594','33595','33598','33601','33602','33603','33604','33605','33606','33607','33608','33609','33610','33611','33612','33613','33614','33615','33616','33617','33618','33619','33620','33621','33622','33623','33624','33625','33626','33629','33631','33633','33634','33635','33637','33647','33650','33651','33655','33660','33661','33662','33663','33664','33672','33673','33674','33675','33677','33679','33680','33681','33682','33684','33685','33686','33687','33688','33689','33690','33694','33697'];
+var Lee_Zips = ['33901','33902','33903','33904','33905','33906','33907','33908','33909','33910','33911','33912','33913','33914','33915','33916','33917','33918','33919','33920','33924','33928','33931','33932','33936','33957','33965','33966','33967','33970','33971','33972','33990','33991','33993','33994','34133','34134','34135','34136'];
+var Manatee_Zips = ['34201','34202','34203','34204','34205','34206','34207','34208','34209','34210','34211','34212','34213','34214','34215','34216','34217','34218','34219','34220','34221','34222','34228','34243','34250','34251','34260','34264','34270','34280','34281','34282'];
+var Miami_Dade_Zips = ['33002','33010','33011','33012','33013','33014','33015','33016','33017','33018','33030','33031','33032','33033','33054','33055','33056','33090','33092','33101','33102','33107','33109','33110','33111','33112','33114','33116','33119','33121','33122','33124','33125','33126','33127','33128','33129','33130','33131','33132','33133','33134','33135','33136','33137','33138','33139','33140','33141','33142','33143','33144','33145','33146','33147','33148','33149','33150','33151','33152','33153','33154','33155','33156','33157','33158','33159','33160','33161','33162','33163','33164','33165','33166','33167','33168','33169','33170','33171','33172','33173','33174','33175','33176','33177','33178','33179','33180','33181','33182','33183','33184','33185','33186','33187','33188','33189','33190','33193','33194','33195','33196','33197','33198','33199','33231','33233','33234','33238','33239','33242','33243','33245','33247','33255','33256','33257','33261','33265','33266','33269','33280','33283','33296','33299'];
+var Palm_Beach_Zips = ['33401','33402','33403','33404','33405','33406','33407','33408','33409','33410','33411','33412','33413','33414','33415','33416','33417','33419','33420','33421','33422','33424','33425','33426','33427','33428','33429','33431','33432','33433','33434','33435','33436','33437','33444','33445','33446','33447','33448','33454','33459','33460','33461','33462','33463','33464','33465','33466','33467','33474','33480','33481','33482','33483','33484','33485','33486','33487','33488','33496','33497','33498','33499'];
+var Pasco_Zips = ['33543','33544','34610','34637','34638','34639','34652','34653','34654','34655','34656','34667','34668','34669','34673','34674','34679','34680','34690','34691','34692'];
+var Pinellas_Zips = ['33701','33702','33703','33704','33705','33706','33707','33708','33709','33710','33711','33712','33713','33714','33715','33716','33729','33730','33731','33732','33733','33734','33736','33737','33738','33740','33741','33742','33743','33744','33747','33755','33756','33757','33758','33759','33760','33761','33762','33763','33764','33765','33766','33767','33769','33770','33771','33772','33773','33774','33775','33776','33777','33778','33779','33780','33781','33782','33783','33784','33785','33786','34660','34677','34681','34682','34683','34684','34685','34688','34689','34695','34697','34698'];
+var Polk_Zips = ['33801','33802','33803','33804','33805','33806','33807','33809','33810','33811','33812','33813','33815','33823','33827','33830','33831','33838','33839','33840','33844','33845','33846','33847','33850','33851','33853','33859','33860','33863','33867','33868','33877','33880','33881','33882','33883','33884','33885','33888','33898','33896','33897','34759'];
+var Sarasota_Zips = ['34223','34229','34230','34231','34232','34233','34234','34235','34236','34237','34238','34239','34240','34241','34242','34272','34274','34275','34276','34277','34278','34284','34285','34286','34287','34288','34289','34292','34293','34295'];
+var Broward_Zips = ['33004','33005','33006','33007','33008','33009','33010','33019','33020','33021','33022','33023','33024','33025','33026','33027','33028','33029','33034','33035','33036','33037','33038','33039','33040','33041','33042','33043','33044','33045','33046','33047','33048','33049','33050','33051','33052','33053','33057','33058','33059','33060','33061','33062','33063','33064','33065','33066','33067','33068','33069','33070','33071','33072','33073','33074','33075','33076','33077','33078','33079','33080','33081','33082','33083','33084','33085','33086','33087','33088','33089','33091'];
+var Osceola_Zips = ['34711','34739','34741','34742','34743','34744','34745','34746','34747','34758','34769','34770','34771','34772','34773','34787'];
+var Orange_Zips = ['32703','32704','32710','32712','32751','32789','32790','32792','32793','32794','32798','32801','32802','32803','32804','32805','32806','32807','32808','32809','32810','32811','32812','32814','32816','32817','32818','32819','32820','32821','32822','32824','32825','32826','32827','32828','32829','32830','32831','32832','32833','32834','32835','32836','32837'];
+var Seminole_Zips = ['32701','32707','32708','32714','32730','32746','32750','32765','32766','32771','32773','32779','32726','32732','32795','32736','32757','32752','32776','32778','32795','32839','34715','34734','34748','34756','34760','34761','34786','34788'];
+
+function DeliverableZip( zip ) {
+	return Charlotte_Zips.indexOf(zip) >= 0
+		|| Collier_Zips.indexOf(zip) >= 0
+		|| Desoto_Zips.indexOf(zip) >= 0
+		|| Hernando_Zips.indexOf(zip) >= 0
+		|| Hillsborough_Zips.indexOf(zip) >= 0
+		|| Lee_Zips.indexOf(zip) >= 0
+		|| Manatee_Zips.indexOf(zip) >= 0
+		|| Miami_Dade_Zips.indexOf(zip) >= 0
+		|| Palm_Beach_Zips.indexOf(zip) >= 0
+		|| Pasco_Zips.indexOf(zip) >= 0
+		|| Pinellas_Zips.indexOf(zip) >= 0
+		|| Polk_Zips.indexOf(zip) >= 0
+		|| Sarasota_Zips.indexOf(zip) >= 0
+		|| Broward_Zips.indexOf(zip) >= 0
+		|| Osceola_Zips.indexOf(zip) >= 0
+		|| Orange_Zips.indexOf(zip) >= 0
+		|| Seminole_Zips.indexOf(zip) >= 0;
+}
+function TestTax(){
+	var test = prompt("Enter zip","");
+	alert(GetTaxRate(test));
+}
+function GetTaxRate(zip){
+	//z = DeliveryZips.indexOf(zip);
+	sRegion = document.getElementById("sRegion");
+	TaxRateNum = document.getElementById("TaxRateNumber");
+	if(Charlotte_Zips.indexOf(zip) >= 0 ){
+		sRegion.value = "3";
+		TaxRateNum.value = "5"
+		return "1.07";// "Charlotte"; //Tax Rate number || rate || Sregion : 5 ||  7% || 3
+	}else if(Collier_Zips.indexOf(zip) >= 0){
+		sRegion.value = "3";
+		TaxRateNum.value = "10"
+		return "1.06";// "Collier"; //Tax Rate number || rate || Sregion : 10 ||  6% || 3
+	}else if(Desoto_Zips.indexOf(zip) >= 0){
+		sRegion.value = "1";
+		TaxRateNum.value = "12"
+		return "1.075";// "Desoto"; //Tax Rate number || rate || Sregion : 12 ||  7.5% || 1
+	}else if(Hernando_Zips.indexOf(zip) >= 0){
+		sRegion.value = "2";
+		TaxRateNum.value = "8"
+		return "1.06";// "Hernando"; //Tax Rate number || rate || Sregion : 8 ||  6% || 2
+	}else if(Hillsborough_Zips.indexOf(zip) >= 0){
+		sRegion.value = "2";
+		TaxRateNum.value = "4"
+		return "1.07";// "Hillsborough"; //Tax Rate number || rate || Sregion : 4 ||  7% || 2
+	}else if(Lee_Zips.indexOf(zip) >= 0){
+		sRegion.value = "3";
+		TaxRateNum.value = "6"
+		return "1.06";// "Lee"; //Tax Rate number || rate || Sregion : 6 ||  6% || 3
+	}else if(Manatee_Zips.indexOf(zip) >= 0){
+		sRegion.value = "1";
+		TaxRateNum.value = "1"
+		return "1.07";// "Manatee"; //Tax Rate number || rate || Sregion : 1 ||  7% || 1
+	}else if(Miami_Dade_Zips.indexOf(zip) >= 0){
+		sRegion.value = "4";
+		TaxRateNum.value = "9"
+		return "1.07";// "Miami-Dade"; //Tax Rate number || rate || Sregion : 9 ||  7% || 4
+	}else if(Palm_Beach_Zips.indexOf(zip) >= 0){
+		sRegion.value = "4";
+		TaxRateNum.value = "14"
+		return "1.07";// "Palm Beach"; //Tax Rate number || rate || Sregion : 8 || 7% || 4
+	}else if(Pasco_Zips.indexOf(zip) >= 0){
+		sRegion.value = "2";
+		TaxRateNum.value = "7"
+		return "1.07";// "Pasco"; //Tax Rate number || rate || Sregion : 7 ||  7% || 2
+	}else if(Pinellas_Zips.indexOf(zip) >= 0){
+		sRegion.value = "2";
+		TaxRateNum.value = "3"
+		return "1.07";// "Pinellas"; //Tax Rate number || rate || Sregion : 3 ||  7% || 2
+	}else if(Polk_Zips.indexOf(zip) >= 0){
+		sRegion.value = "5";
+		TaxRateNum.value = "13"
+		return "1.07";// "Polk"; //Tax Rate number || rate || Sregion : 13 ||  7% || 5
+	}else if(Sarasota_Zips.indexOf(zip) >= 0){
+		sRegion.value = "1";
+		TaxRateNum.value = "2"
+		return "1.07";// "Sarasota"; //Tax Rate number || rate || Sregion : 2 ||  7% || 1
+	}else if(Broward_Zips.indexOf(zip) >= 0){
+		sRegion.value = "4";
+		TaxRateNum.value = "8"
+		return "1.06";// "Broward"; //Tax Rate number || rate || Sregion : 8 ||  6% || 4
+	}else if(Osceola_Zips.indexOf(zip) >= 0){
+		sRegion.value = "6";
+		TaxRateNum.value = "16"
+		return "1.075";// "Osceola"; //Tax Rate number || rate || Sregion : 16 ||  7.5% || 6
+	}else if(Orange_Zips.indexOf(zip) >= 0){
+		sRegion.value = "6";
+		TaxRateNum.value = "15"
+		return "1.065";// "Orange"; //Tax Rate number || rate || Sregion : 15 ||  6.5% || 6
+	}else if(Seminole_Zips.indexOf(zip) >= 0){
+		sRegion.value = "6";
+		TaxRateNum.value = "17"
+		return "1.07";// "Seminole"; //Tax Rate number || rate || Sregion : 17 ||  7% || 6
+	}
+}
+
+function SetTaxAndTotal(zip,subtotal_taxable,subtotal_nontaxable){
+	var taxRate = GetTaxRate(zip);
+	var taxAmt = 0;
+	var subtotal = parseFloat(subtotal_taxable) + parseFloat(subtotal_nontaxable);
+	var bottleDepAmt = parseFloat(document.getElementById("BottleDepositAmt").value);
+	var FirstTimeDisc = parseFloat(document.getElementById("FirstTimeDiscount").value);
+	var DeliveryFee = parseFloat(document.getElementById("DeliveryFee").value);
+	if(window.location.href.indexOf('credit-card-input') > -1){
+		taxAmt = parseFloat(subtotal_taxable) * (parseFloat(taxRate) - 1);
+		document.getElementById("SalesTaxDiv").innerHTML = "$" + taxAmt.toFixed(2);
+	}
+	document.getElementById("Total").value = (subtotal + taxAmt + bottleDepAmt + FirstTimeDisc + DeliveryFee).toFixed(2);
+	document.getElementById("TotalDiv").innerHTML = "$" + (subtotal + taxAmt + bottleDepAmt + FirstTimeDisc + DeliveryFee).toFixed(2);
+}
+
+function AddToCart(prodID) {
+	qty = document.getElementById("product-quantity-" + prodID).value;
+	if(qty == "")
+		alert("Please select a quantity before adding a product to your cart!");
+	else
+		window.location.href = '?prodID=' + prodID + '&qty=' + qty;
+}
+function UpdateQuantity(prodID){
+	var updQty = document.getElementById("updQty_" + prodID);
+	window.location.href = '?prodID=' + prodID + '&qty=' + updQty.options[updQty.selectedIndex].value;
+}
+function _GetProdAddQty(prodID){
+	pQty = 0;
+	document.getElementById("product-quantity-" + prodID).selectedIndex.value;
+}
+function SetBillAddr(withValues){
+	if(withValues){
+		document.getElementById("Bill_Address1").value = document.getElementById("Address1").value;
+		document.getElementById("Bill_Address2").value = document.getElementById("Address2").value;
+		document.getElementById("Bill_City").value = document.getElementById("City").value;
+		document.getElementById("Bill_State").selectedIndex = document.getElementById("State").selectedIndex;
+		document.getElementById("Bill_Zip").value = document.getElementById("Zip").value;
+	}
+	else{
+		document.getElementById("Bill_Address1").value = "";
+		document.getElementById("Bill_Address2").value = "";
+		document.getElementById("Bill_City").value = "";
+		document.getElementById("Bill_State").selectedIndex = 0;
+		document.getElementById("Bill_Zip").value = "";
+	}
+}
+function SetCustomerInfo(){
+	if(document.getElementById("Address1").value.trim() == ""){
+		alert("Please enter in an address.");
+		return false;
+	}
+	if(document.getElementById("City").value.trim() == ""){
+		alert("Please enter in an City.");
+		return false;
+	}
+	if(document.getElementById("State").value.trim() == ""){
+		alert("Please enter in an State.");
+		return false;
+	}
+	if(document.getElementById("Zip").value.trim() == ""){
+		alert("Please enter in an Zip.");
+		return false;
+	}
+	if(!DeliverableZip(document.getElementById("Zip").value.trim())){
+		alert("This shipping zip code is not within an area that we deliver to. Please confirm this is the zip that was originally entered.");
+		return false;
+	}
+	if(!isInt(document.getElementById("Zip").value) || document.getElementById("Zip").value.length < 5){
+		alert("Please enter a valid 5 digit shipping zip.");
+		document.getElementById("Zip").focus;
+		return false;
+	}
+	if(document.getElementById("Phone").value.trim() == ""){
+		alert("Please enter in an phone number.");
+		return false;
+	}
+	if(document.getElementById("Email").value.trim() == "" || !validateEmail(document.getElementById("Email").value)){
+		alert("Please enter in a valid email address.");
+		return false;
+	}
+	if(document.getElementById("FName").value.trim() == ""){
+		alert("Please enter in a first name.");
+		return false;
+	}
+	if(document.getElementById("LName").value.trim() == ""){
+		alert("Please enter in a last name.");
+		return false;
+	}
+	if(document.getElementById("female").checked){
+		if(document.getElementById("Bill_Address1").value.trim() == ""){
+				alert("Please enter in a billing address.");
+				return false;
+			}
+		if(document.getElementById("Bill_City").value.trim() == ""){
+			alert("Please enter in a billing City.");
+			return false;
+		}
+		if(document.getElementById("Bill_State").value.trim() == ""){
+			alert("Please enter in a billing State.");
+			return false;
+		}
+		if(document.getElementById("Bill_Zip").value.trim() == ""){
+			alert("Please enter in a billing Zip.");
+			return false;
+		}
+		if(!isInt(document.getElementById("Bill_Zip").value) || document.getElementById("Bill_Zip").value.length < 5){
+			alert("Please enter a valid 5 digit billing zip.");
+			document.getElementById("Bill_Zip").focus;
+			return false;
+		}
+
+	}
+	var phone = document.getElementById("Phone");
+	phone.value = phone.value.replace(/\D/g,'');
+	if(phone.value.length != 10){
+		alert("Please enter a ten digit phone number.");
+		return false;
+	}
+	phone.value = phone.value.substring(0,3) + "-" + phone.value.substring(3,6) + "-" + phone.value.substring(6,10);
+	var delDate = new Date(document.getElementById("DeliveryDate").value);
+	var earliestDate = new Date(document.getElementById("MinDate").value);
+	if(!validateDateFormat(document.getElementById("DeliveryDate"))){
+		alert("Please enter in a date with the following format: day/month/year");
+		return false;
+	}
+	if(dates.compare(earliestDate,delDate) == 1){
+		alert("Delivery Date must be no earlier than " + document.getElementById("MinDate").value);
+		return false;
+	}
+	var singleDel = document.getElementById("SingleDel").checked;
+
+	qs = '?addr1=' + document.getElementById("Address1").value.replace(/&/g," ") +
+		 '&addr2=' + document.getElementById("Address2").value.replace(/&/g," ") +
+ 		 '&city=' + document.getElementById("City").value.replace(/&/g," ") +
+		 '&state=' + document.getElementById("State").value.replace(/&/g," ") +
+		 '&zip=' + document.getElementById("Zip").value.replace(/&/g," ") +
+		 '&fname=' + document.getElementById("FName").value.replace(/&/g," ") +
+		 '&lname=' + document.getElementById("LName").value.replace(/&/g," ") +
+		 '&email=' + document.getElementById("Email").value.replace(/&/g," ") +
+		 '&phone=' + document.getElementById("Phone").value +
+		 '&SingleDel=' + singleDel +
+		 '&DelDate=' + document.getElementById("DeliveryDate").value +
+		 '&Notes=' + document.getElementById("CommentSection").value.trim().replace(/&/g," ") +
+		 '&companyname=' + document.getElementById("companyname").value.replace(/&/g," ");
+
+	if(document.getElementById("female").checked){
+		qs+= '&bill_addr1=' + document.getElementById("Bill_Address1").value.replace(/&/g," ") +
+		 '&bill_addr2=' + document.getElementById("Bill_Address2").value.replace(/&/g," ") +
+ 		 '&bill_city=' + document.getElementById("Bill_City").value.replace(/&/g," ") +
+		 '&bill_state=' + document.getElementById("Bill_State").value.replace(/&/g," ") +
+		 '&bill_zip=' + document.getElementById("Bill_Zip").value.replace(/&/g," ");
+	}
+	window.location.href = qs;
+
+	return;
+}
+function validateEmail(email) {
+  var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(email);
+}
+function validateDateFormat(inputText)
+  {
+	var dateformat = /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/;
+	dateformat = /^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/(19|20)\d{2}$/ ;
+	// Match the date format through regular expression
+	if(inputText.value.match(dateformat))
+	{
+		//document.form1.text1.focus();
+		//Test which seperator is used '/' or '-'
+		var opera1 = inputText.value.split('/');
+		var opera2 = inputText.value.split('-');
+		lopera1 = opera1.length;
+		lopera2 = opera2.length;
+		// Extract the string into month, date and year
+		if (lopera1>1)
+		{
+			var pdate = inputText.value.split('/');
+		}
+		else if (lopera2>1)
+		{
+			var pdate = inputText.value.split('-');
+		}
+		var mm  = parseInt(pdate[0]);
+		var dd = parseInt(pdate[1]);
+		var yy = parseInt(pdate[2]);
+		// Create list of days of a month [assume there is no leap year by default]
+		var ListofDays = [31,28,31,30,31,30,31,31,30,31,30,31];
+		if (mm==1 || mm>2)
+		{
+			if (dd>ListofDays[mm-1])
+			{
+				//alert('Invalid date format!');
+				return false;
+			}
+		}
+		if (mm==2)
+		{
+			var lyear = false;
+			if ( (!(yy % 4) && yy % 100) || !(yy % 400))
+			{
+				lyear = true;
+			}
+			if ((lyear==false) && (dd>=29))
+			{
+				//alert('Invalid date format!');
+				return false;
+			}
+			if ((lyear==true) && (dd>29))
+			{
+				//alert('Invalid date format!');
+				return false;
+			}
+		}
+		return true;
+		}
+		else
+		{
+		//alert("Invalid date format!");
+		//document.form1.text1.focus();
+			return false;
+		}
+  }
+  function DateTest(){
+	var singleDel = document.getElementById("SingleDel").checked;
+	  var delDate = new Date(document.getElementById("DeliveryDate").value);
+	  	var earliestDate = new Date(document.getElementById("MinDate").value);
+	  	if(!validateDateFormat(document.getElementById("DeliveryDate"))){
+	  		alert("Please enter in a date with the following format: month/day/year");
+	  		return false;
+	  	}
+	  	if(dates.compare(earliestDate,delDate) == 1){
+	  		alert("Delivery Date must be no earlier than " + document.getElementById("MinDate").value);
+	  		return false;
+	}
+  }
+
+function SubmitPayment(){
+	if(document.getElementById("delType").value == "Home" && !document.getElementById("cbSaveCard").checked){
+		alert("For residential deliveries, the Terms and Conditions to Save This Card must be accepted.");
+		return false;
+	}
+	//Value checks + card number checks
+	//cartID CCNumber CVV EXP NAME CardType TaxRateNumber SRegion Total
+	if(CheckCCInfo()){
+		document.getElementById("CardNum").value = document.getElementById("ccNumber").value
+		document.getElementById("CardCVV").value = document.getElementById("ccCVV").value
+		document.getElementById("CardEXP").value = document.getElementById("ccMonth").value + document.getElementById("ccYear").value
+		document.getElementById("CardName").value = document.getElementById("ccName").value
+		document.getElementById("CardType").value = document.getElementById("ccType").value
+		document.getElementById("CustSaveCard").value = document.getElementById("SaveCard").value
+		document.getElementById("CardAddr1").value = document.getElementById("ccAddr1").value
+		document.getElementById("CardAddr2").value = document.getElementById("ccAddr2").value
+		document.getElementById("CardCity").value = document.getElementById("ccCity").value
+		document.getElementById("CardState").value = document.getElementById("ccState").value
+		document.getElementById("CardZip").value = document.getElementById("ccZip").value
+		document.SubmitForm.submit();
+	}
+}
+
+var MCBeginningNumber = "5";
+var VisaBeginningNumber = "4";
+var DiscoverBeginningNumber = "6";
+var AMEXBeginningNumber = "3";
+function CheckCCInfo() {
+    var cctype = document.getElementById("ccType").value.trim();
+    var ccNum = document.getElementById("ccNumber").value.trim();
+    var ccCVV = document.getElementById("ccCVV").value.trim();
+    if(ccNum == "12345")
+    	return true;
+    if (document.getElementById("ccName").value.trim() == "") {
+        alert("Please enter in the name on the card.");
+        document.getElementById("ccName").focus();
+        return false;
+    }
+    if (cctype == "") {
+        alert("Please Select a Credit Card Type");
+        document.getElementById("ccType").focus();
+        return false;
+    }
+    if (ccNum == "") {
+        alert("Please enter a credit card number");
+        document.getElementById("ccNumber").focus;
+        return false;
+    }
+    if (ccCVV == "") {
+        alert("Please enter a CVV Code");
+        document.getElementById("ccCVV").focus;
+        return false;
+    }
+    var date = new Date();
+    if (document.getElementById("ccMonth").value - 1 < date.getMonth() && document.getElementById("ccYear").value == date.getFullYear()) {
+        alert("Please enter a non-expired expiration date");
+        return false;
+    }
+    if(document.getElementById("ccAddr1").value.trim() == ""){
+        alert("Please enter an address.");
+        document.getElementById("ccAddr1").focus;
+        return false;
+    }
+    if(document.getElementById("ccCity").value.trim() == ""){
+        alert("Please enter a city.");
+        document.getElementById("ccCity").focus;
+        return false;
+    }
+    if(document.getElementById("ccState").value.trim() == ""){
+        alert("Please enter a state.");
+        document.getElementById("ccState").focus;
+        return false;
+    }
+    if(document.getElementById("ccZip").value.trim() == ""){
+        alert("Please enter a zip.");
+        document.getElementById("ccZip").focus;
+        return false;
+    }
+    if(!isInt(document.getElementById("ccZip").value) || document.getElementById("ccZip").value.length < 5){
+        alert("Please enter a valid 5 digit zip.");
+        document.getElementById("ccZip").focus;
+        return false;
+	}
+    var validated = false;
+    switch (cctype) {
+        case "MC":
+            if (ccCVV.length != 3) {
+                alert("Please enter a valid CVV Code");
+                document.getElementById("ccCVV").focus;
+                break;
+            }
+            validated = validateCCNum(ccNum, MCBeginningNumber, 16, 19)
+           if(!validated) {
+                alert("Please enter in a valid MasterCard card number.");
+                document.getElementById("ccNumber").focus;
+            }
+            break;
+        case "DISCOVER":
+            if (ccCVV.length != 3) {
+                alert("Please enter a valid CVV Code");
+                document.getElementById("ccCVV").focus;
+                break;
+            }
+            validated = validateCCNum(ccNum, DiscoverBeginningNumber, 16, 16)
+            if (!validated) {
+                alert("Please enter in a valid Discover card number.");
+                document.getElementById("ccNumber").focus;
+            }
+            break;
+        case "VISA":
+            if (ccCVV.length != 3) {
+                alert("Please enter a valid CVV Code");
+                document.getElementById("ccCVV").focus;
+                break;
+            }
+            validated = validateCCNum(ccNum, VisaBeginningNumber, 13, 16)
+            if (!validated) {
+                alert("Please enter in a valid VISA card number.");
+                document.getElementById("ccNumber").focus;
+            }
+            break;
+        case "AMX":
+            if (ccCVV.length < 3 || ccCVV.length > 4) {
+                alert("Please enter a valid CVV Code");
+                document.getElementById("ccCVV").focus;
+                break;
+            }
+            validated = validateCCNum(ccNum, AMEXBeginningNumber, 15, 15)
+            if (!validated) {
+                alert("Please enter in a valid American Express card number.");
+                document.getElementById("ccNumber").focus;
+            }
+            break;
+    }
+    return validated;
+}
+function validateCCNum(theNum,beginningNumber,minLength,maxLength) {
+    var isValid = false;
+        if (theNum.substring(0, 1) == beginningNumber) {
+            if (theNum.length >= minLength && theNum.length <= maxLength) {
+                 isValid = luhnValid(theNum);
+            }
+        }
+    return isValid;
+}
+function luhnValid(cardNo) { // cardNo as a string w/ digits only
+    var sum = 0, even = false;
+    cardNo.split("").reverse().forEach(function (dstr) {
+        d = parseInt(dstr);
+        sum += ((even = !even) ? d : (d < 5) ? d * 2 : (d - 5) * 2 + 1);
+    });
+    return (sum % 10 == 0);
+}
+function ShowTandC(){
+	document.getElementById('term-popup').style.display='block';
+}
+
+function checkAvailability(e){
+	if(e.keyCode == 13){
+		jQuery("#btnCheckAvail").click();
+	}
+}
+
+function toggleTA(toggled){
+	if(toggled == "single")
+		document.getElementById("SingleOccuranceDetails").style = "display:block;";
+	else
+		document.getElementById("SingleOccuranceDetails").style = "display:none;";
+}
+
+
+
+	if(window.location.href.indexOf('credit') >= 0 || window.location.href.indexOf('cart-review') >= 0)
+		SetTaxAndTotal(document.getElementById("Zip").value,document.getElementById("Subtotal_Taxable").value,document.getElementById("Subtotal_NonTaxable").value);
+	//}
+
+	jQuery("body").keypress(function (e) {
+
+	    var k = e.keyCode || e.which;
+	    if (k == 96) {
+	        return false; // !!!
+	    }
+	});
+
+	var emptyCartMessage = "Cart must have a total greater than 0 to continue to checkout.";
+
+function isInt(value) {
+	return !isNaN(value) &&
+		   parseInt(Number(value)) == value &&
+		   !isNaN(parseInt(value, 10));
+}
+
+function checkAvail(e){
+	var key = e.keyCode || e.which;
+	if(key == 13){
+        e.preventDefault();
+        e.stopPropagation();
+		document.getElementById("chkAvailBtn").click();
+	}
+}

@@ -1,0 +1,70 @@
+
+.container { padding: 0 15px; width: 100%; }
+
+.mobile-no { display: inline-block; }
+
+.desktop-no { display: none; }
+
+.top-contact span a{   color: #ff9933;}
+
+
+
+.banner { height: 600px; background-position: center center; position: relative; }
+
+.banner-search { left: 15px; }
+
+.sub-page-banner { height: 470px; }  
+
+.member li { margin: 0 7.5px; }  
+
+.follow-us a { height: 50px; width: 50px; margin: 0 10px 0 0; }
+
+.why-choose-row .col-6 { padding: 15px; }
+
+.services li { padding: 15px; }
+
+.service-title { min-height: 100px; }
+
+.services p { color: #ffffff; font-size: 14px; line-height: 26px; }
+
+
+
+#msg-container { display: none; }
+
+
+
+
+/*commerce-pages css*/
+
+.product-table-cell:nth-child(6n+2) { text-align: center; }
+
+.product-table-cell { vertical-align: middle; }
+
+.product-Invoice-right { float: right; width: 100%; }
+
+.product-Invoice-left, .product-Invoice-right { width: 100%; padding: 0; }
+
+.product-step li + li { border-left: none; }
+
+.right-cart { float: right; width: 100%; }
+
+.left-product { float: left; padding: 0; width: 100%; }
+
+.pop-up-inner{max-width:90%;}
+ 
+.banner img {
+    display: block;
+}
+.banner-captions {
+    bottom: 0;
+    font-size: 32px;
+    margin: auto;
+    padding: 15px;
+    text-align: center;
+    top: inherit;
+     width: 700px;
+	 -ms-transform: none; -webkit-transform: none; transform: none;
+}
+  
+/**/
+.nav-bar .ubermenu-skin-black-white-2 .ubermenu-item-level-0 > .ubermenu-target { padding: 15px; }

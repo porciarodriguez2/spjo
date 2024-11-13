@@ -1,0 +1,121 @@
+
+/*header area*/
+.header .top-contact { display: none; }
+
+.header .right { width: 100%; }
+
+.header .nav-bar { display: none; float: left; width: 100%; }
+
+.header { padding: 60px 0 0; }
+
+.header .container { padding: 0; }
+
+.logo { margin: 0 0 15px 15px; position: static; }
+
+.nav-bar li { display: block; float: none; }
+
+.nav-bar a { display: block; float: none; padding: 5px 15px; }
+
+.top-fixed { position: relative; }
+
+.svg-bar { display: block; }
+
+/*This Disabled the search function completely on mobile */
+/* .search { display: none; } */
+
+
+
+
+/**/
+.top-bar { position: fixed; width: 100%; z-index: 9999; box-shadow: 0 0px 6px 1px rgba(0,0,0,0.8); -webkit-box-shadow: 0 0px 6px 1px rgba(0,0,0,0.8); -moz-box-shadow: 0 0px 6px 1px rgba(0,0,0,0.8); }
+
+.phone-bar-in { margin: 0 auto; text-align: center; width: 100%; display: block; }
+
+.phone-bar-in > a { color: #ffffff; display: inline-block; margin: 0 auto; font-size: 24px; text-decoration: none; font-weight: 600; }
+
+.top-bar .right { width: 100%; }
+
+#ubermenu-nav-main-2-primary{ float: none; }
+
+.ubermenu-skin-black-white-2.ubermenu-responsive-toggle { display: none; }
+
+.nav-bar .ubermenu-nav > li:first-child { padding: 0; }
+
+.nav-bar #ubermenu-main-2-primary { background: #00294f; }
+
+.nav-bar .ubermenu-items-align-left.ubermenu-horizontal .ubermenu-item.ubermenu-item-level-0, .nav-bar .ubermenu.ubermenu-horizontal .ubermenu-item.ubermenu-align-left { width: 100%; }
+
+.nav-bar .ubermenu-skin-black-white-2 .ubermenu-item-level-0 > .ubermenu-target { color: #fff; }
+
+.nav-bar .ubermenu-skin-black-white-2 .ubermenu-submenu.ubermenu-submenu-drop { position: static; margin: 0; left: 0; }
+
+.nav-bar .ubermenu-sub-indicators .ubermenu-has-submenu-drop > .ubermenu-target:after { display: block; }
+
+.nav-bar .ubermenu .ubermenu-item-layout-image_left > .ubermenu-image { float: left; }
+/**/
+
+.left-side { width: 100%; padding: 0px; margin: 0 0 20px; }
+
+.tab-content .right-side { width: 100%; padding: 0px; }
+
+.welcome .left { width: 65%; padding: 0 15px 0 0 }
+
+.welcome .right { width: 35%; }
+
+.why-choose-row .col-6 { height: 450px; padding: 15px; }
+
+.services .row ul { display: block; margin: -2px; overflow: hidden; width: auto; }
+
+.service-title { margin: 10px 0; min-height: inherit; }
+
+.service-title { margin: 10px 0; min-height: inherit; }
+
+.services li { border: 2px solid #ffffff !important; display: block; float: left; height: 360px; padding: 15px; width: 50%; }
+
+.service-icon-image { display: inline-block; min-height: 175px; position: relative; vertical-align: bottom; width: 100%; }
+
+.service-icon-image img { bottom: 0; left: 0; margin: auto; max-width: none; position: absolute; right: 0; top: 0; }
+
+.left-side-content { width: 100%; padding: 0; margin: 0 0 40px; }
+
+.right-side-content { float: left; width: 100%; }
+
+.form-title { font-size: 30.33px; }
+
+.top-contact span{font-size: 25px;}
+
+.top-contact p { font-size: 20px; }
+
+.quickcontact .top-contact { margin: 0 0 15px; }
+
+.contact-info { margin: 0; }
+
+.ubermenu-responsive-default.ubermenu-responsive.ubermenu-responsive-collapse {
+  max-height: inherit;
+  overflow: visible !important;
+  visibility: visible;
+}
+
+.nav-bar .ubermenu .ubermenu-submenu-align-full_width .ubermenu-item-level-1 {
+ padding: 20px 0 0;
+  width: 100%;
+}
+
+.nav-bar .ubermenu .ubermenu-submenu-align-full_width > .ubermenu-column > a {
+ 
+  width: 100%;
+}
+.nav-bar .ubermenu .ubermenu-submenu-align-full_width > .ubermenu-column > .ubermenu-submenu-type-stack {
+
+  padding: 10px;
+  width: 100%;
+}
+
+.nav-bar .ubermenu-has-submenu-stack .ubermenu-has-submenu-stack .ubermenu-submenu-type-auto.ubermenu-submenu-type-stack {
+  border-left: none;
+  border-top: 2px solid #00294f;
+
+}
+.sub-page-banner {
+  height: 300px;
+}

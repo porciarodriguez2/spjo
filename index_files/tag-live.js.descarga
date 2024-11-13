@@ -1,0 +1,941 @@
+(function(networkId) {
+var automaticIntegrations = {"gaMeasurementId":{"paramName":"ga_measurement_id"},"gaSessionId":{"paramName":"ga_session_id"},"googleAnalytics":{"paramName":"g_cid"}};
+
+var cacheLifetimeDays = 7;
+
+var customDataWaitForConfig = [
+  { on: function() { return Invoca.Client.parseCustomDataField("activity_value", "Last", "URLParam", ""); }, paramName: "activity_value", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("agent", "Last", "URLParam", ""); }, paramName: "agent", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("bc_marketing_source", "Last", "URLParam", ""); }, paramName: "bc_marketing_source", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("bc_phone_label", "Last", "URLParam", ""); }, paramName: "bc_phone_label", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("browser", "Last", "JavascriptDataLayer", "navigator.vendor"); }, paramName: "browser", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("calling_page", "Last", "JavascriptDataLayer", "location.hostname + location.pathname"); }, paramName: "calling_page", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("Client", "First", "URLParam", ""); }, paramName: "Client", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("customer_id", "Last", "URLParam", ""); }, paramName: "customer_id", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("detected_destination", "Last", "URLParam", ""); }, paramName: "detected_destination", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("dni_transfer_number", "Last", "URLParam", ""); }, paramName: "dni_transfer_number", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("domain_name", "Last", "JavascriptDataLayer", "location.hostname"); }, paramName: "domain_name", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("do_not_record", "Last", "URLParam", ""); }, paramName: "do_not_record", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("fallback_destination", "Last", "URLParam", ""); }, paramName: "fallback_destination", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("fbclid", "Last", "URLParam", ""); }, paramName: "fbclid", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("ga_api_secret", "Last", "URLParam", ""); }, paramName: "ga_api_secret", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("gbraid", "Last", "URLParam", ""); }, paramName: "gbraid", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("gclid", "Last", "URLParam", ""); }, paramName: "gclid", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("industry", "Last", "URLParam", ""); }, paramName: "industry", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("ip_address", "Last", "JavascriptDataLayer", "Invoca.Client.getIPAddress()"); }, paramName: "ip_address", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("IVR_Keypresses", "Last", "URLParam", ""); }, paramName: "IVR_Keypresses", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("landing_page", "First", "JavascriptDataLayer", "location.href"); }, paramName: "landing_page", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("landing_page_last", "Last", "JavascriptDataLayer", "location.href"); }, paramName: "landing_page_last", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("msclkid", "Last", "URLParam", ""); }, paramName: "msclkid", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("os", "Last", "JavascriptDataLayer", "navigator.platform"); }, paramName: "os", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("parameter_lookup_key", "Last", "JavascriptDataLayer", "Invoca.Client.getParameterLookupKey()"); }, paramName: "parameter_lookup_key", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("profile_name", "Unique", "URLParam", ""); }, paramName: "profile_name", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("referring_url", "First", "JavascriptDataLayer", "document.referrer || \"direct\""); }, paramName: "referring_url", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("referring_url_last", "Last", "JavascriptDataLayer", "document.referrer || \"direct\""); }, paramName: "referring_url_last", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("route_trigger", "Last", "URLParam", ""); }, paramName: "route_trigger", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("st-t", "Last", "URLParam", ""); }, paramName: "st-t", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("syndication_destination", "Last", "URLParam", ""); }, paramName: "syndication_destination", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("utm_campaign", "Last", "URLParam", ""); }, paramName: "utm_campaign", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("utm_campaign_first_touch", "Last", "URLParam", ""); }, paramName: "utm_campaign_first_touch", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("utm_campaign_multi_touch", "Multi", "URLParam", ""); }, paramName: "utm_campaign_multi_touch", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("utm_content", "Last", "URLParam", ""); }, paramName: "utm_content", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("utm_medium_first_touch", "First", "URLParam", ""); }, paramName: "utm_medium_first_touch", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("utm_medium_multi_touch", "Multi", "URLParam", ""); }, paramName: "utm_medium_multi_touch", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("utm_source_first_touch", "First", "URLParam", ""); }, paramName: "utm_source_first_touch", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("utm_source_multi_touch", "Multi", "URLParam", ""); }, paramName: "utm_source_multi_touch", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("utm_term", "Last", "URLParam", ""); }, paramName: "utm_term", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("vt-c", "Last", "URLParam", ""); }, paramName: "vt-c", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("vt-ci", "Last", "URLParam", ""); }, paramName: "vt-ci", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("vt-d", "Last", "URLParam", ""); }, paramName: "vt-d", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("vt-k", "Last", "URLParam", ""); }, paramName: "vt-k", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("vt-lp", "Last", "URLParam", ""); }, paramName: "vt-lp", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("vt-mt", "Last", "URLParam", ""); }, paramName: "vt-mt", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("vt-n", "Last", "URLParam", ""); }, paramName: "vt-n", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("vt-p", "Last", "URLParam", ""); }, paramName: "vt-p", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("vt-t", "Last", "URLParam", ""); }, paramName: "vt-t", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("wbraid", "Last", "URLParam", ""); }, paramName: "wbraid", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("Website_Journey", "Multi", "JavascriptDataLayer", "location.pathname"); }, paramName: "Website_Journey", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("_bct", "Last", "JavascriptDataLayer", "Invoca.Client.getBCT()"); }, paramName: "_bct", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("_fbc", "Last", "Cookie", "\u003c_fbc\u003e"); }, paramName: "_fbc", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("_fbp", "Last", "Cookie", "\u003c_fbp\u003e"); }, paramName: "_fbp", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("_vsrefdom", "Last", "URLParam", ""); }, paramName: "_vsrefdom", fallbackValue: null }
+];
+
+var customDataWaitForConfigAnonymousFunctions = [
+  { on: function() { return Invoca.Client.parseCustomDataField("browser", "Last", "JavascriptDataLayer", function() { return (navigator.vendor); }) }, paramName: "browser", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("calling_page", "Last", "JavascriptDataLayer", function() { return (location.hostname + location.pathname); }) }, paramName: "calling_page", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("domain_name", "Last", "JavascriptDataLayer", function() { return (location.hostname); }) }, paramName: "domain_name", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("ip_address", "Last", "JavascriptDataLayer", function() { return (Invoca.Client.getIPAddress()); }) }, paramName: "ip_address", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("landing_page", "First", "JavascriptDataLayer", function() { return (location.href); }) }, paramName: "landing_page", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("landing_page_last", "Last", "JavascriptDataLayer", function() { return (location.href); }) }, paramName: "landing_page_last", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("os", "Last", "JavascriptDataLayer", function() { return (navigator.platform); }) }, paramName: "os", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("parameter_lookup_key", "Last", "JavascriptDataLayer", function() { return (Invoca.Client.getParameterLookupKey()); }) }, paramName: "parameter_lookup_key", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("referring_url", "First", "JavascriptDataLayer", function() { return (document.referrer || "direct"); }) }, paramName: "referring_url", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("referring_url_last", "Last", "JavascriptDataLayer", function() { return (document.referrer || "direct"); }) }, paramName: "referring_url_last", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("Website_Journey", "Multi", "JavascriptDataLayer", function() { return (location.pathname); }) }, paramName: "Website_Journey", fallbackValue: null },
+  { on: function() { return Invoca.Client.parseCustomDataField("_bct", "Last", "JavascriptDataLayer", function() { return (Invoca.Client.getBCT()); }) }, paramName: "_bct", fallbackValue: null }
+];
+
+var defaultCampaignId = null;
+
+var destinationSettings = {
+  paramName: null
+};
+
+var numbersToReplace = null;
+
+var organicSources = true;
+
+var reRunAfter = 4000;
+
+var requiredParams = null;
+
+var resetCacheOn = ['gclid', 'utm_source', 'utm_medium', '_bct'];
+
+var waitFor = 0;
+
+var customCodeIsSet = (function() {
+  Invoca.Client.customCode = function(options) {
+    options.integrations.googleAnalytics = true;
+options.destinationSettings.paramName = "invoca_detected_destination";
+
+var HOST = window.location.host;
+var SOURCE_VALUES = ["applemaps", "gpemail", "houzz", "instagram", "marketstorm", "PHL17_weather.com", "facebook", "linkedin", "nextdoor", "pinterest", "yelp"];
+var CAMPAIGN_VALUES = ["applemaps", "gpemail", "bingplaces", "whipplethataway", "gmb"];
+Invoca.Tools.allowedClientSideParams(["utm_medium", "utm_source", "st-t", "_bct", "_vsrefdom", "utm_campaign"]);
+
+
+//Numbers to Replace For Each Location
+//Make sure the campaignID matches what is configured and that the formatting is correct before pushing live
+var customNumberToReplace = {
+    "2087671145": "GreenerBrosLandscaping", //DEMO NUMBER
+    "5558675309": "Watterman",              //DEMO NUMBER
+    "5553263827": "Watterman",              //DEMO NUMBER
+    "5052966556": "BellaVista",             //DEMO NUMBER
+    "9525551212": "HallerLakeDentistry",    //DEMO NUMBER
+    "2027967990": "UnitedAirTemp",
+    "2032370350": "FiderioandSons",
+    "2033784700": "TylerHeatingandAirConditioning",
+    "2038890505": "IBP-EcoLogicEnergySolutions",
+    "2056552396": "WilbursAirConditioningHeatingandPlumbing",
+    "2067832525": "AsYouWishElectric",
+    "2069321777": "SouthWestPlumbing",
+    "2083574346": "IBP-BDIIdahoFalls955",
+    "2084884962": "IBP-BDI-BigCityInsulationofIdaho955",
+    "2087459406": "AdvancedHomeServices",
+    "2088989400": "IBP-MarvsInsulation",
+    "2102011366": "IBP-SanAntonio695",
+    "2104941691": "FreundEnterprises",
+    "2104941692": "FreundEnterprises",
+    "2104959991": "GeorgePlumbing",
+    "2105993333": "IBP-AlphaInsulationandWaterproofing",
+    "2106009010": "MJMorganGroup",
+    "2106469600": "DamianisComfortDesign",    
+    "2109424541": "CopperaPlumbingandCommercialServices",
+    "2144445940": "IBP-CLSInsulation955",
+    "2153643500": "HighTechHeatingandCooling",
+    "2154885795": "ChristianHeatingCoolingPlumbingandElectrical",
+    "2154931414": "Confires",
+    "2157201863": "MeridianConstruction",
+    "2165813450": "IBPExpressLogistics",
+    "2158552014": "DonnellysPlumbingHeatingandCooling",
+    "2168314200": "WFHannandSons",
+    "2169329755": "VerneandEllsworthHann",
+    "2196637777": "IBP-MomperInsulationCrownPoint",
+    "2254080390": "PaulDavisBatonRouge",
+    "2255555555": "PaulDavisBatonRougePPCLP",
+    "2292438040": "HarrellKing",
+    "2392260202": "CaloosaCooling",
+    "2392611000": "ProTecPlumbingandAir",
+    "2393172000": "AllstateConstructionRoofing",
+    "2393744126": "CoastalCoolingInc",
+    "2396529905": "IBP-FtMyers",
+    "2399921551": "HainesAirConditioningandRefrigeration",
+    "2402004824": "PotomacConcierge",
+    "2402066030": "PatriotShredding",
+    "2403831226": "Wentworth",
+    "2403913970": "WaterDoctor",
+    "2404064083": "HerronPrinting-NewSite",
+    "2405820090": "MJMorganGroup",
+    "2484428500": "EhlersHeatingandCoolingShop",
+    "2485545480": "DetroitAppliance",
+    "2485792362": "EhlersHeatingandCooling",
+    "2486788141": "SchoenherrRoofing",
+    "2526186217": "ComfortFirstHeatingandCooling",
+    "2532341278": "AAAHeatingandAirConditioning",
+    "2532678669": "IBP-PacificPartnersSouth955",
+    "2533951895": "IBP-InsulationContractorsWA",
+    "2538877792": "SignatureWindowandDoorReplacement",
+    "2547747211": "BSRPlumbing",
+    "2567154061": "IBP-AmericanInsulation-IBPHuntsville955",
+    "2602058509": "IBP-OHDFortWayne511",
+    "2604322008": "IBPFortWayneUrethane",
+    "2604327543": "IBP-MomperInsulation",
+    "2604932596": "KorteDoesItAllInc",
+    "2627236565": "AdamsPower",
+    "2702820128": "IBP-BlueGrassInsulation955",
+    "2703150309": "SalsHeatingandCoolingPlumbingandSewer",
+    "2816538382": "IBP-Houston955",
+    "2819997000": "IBP-AlphaInsulationandWaterproofing",
+    "3012511658": "SignatureElevators",
+    "3012511880": "SignatureKitchensAdditionsandBaths",
+    "3012533778": "JaffeElectrical",
+    "3012589750": "KevcoBuildingServices",
+    "3013048789": "McCreaHeatingandAirConditioning",
+    "3013586411": "IBP-AccurateInsulationMD857and858",
+    "3013634064": "JackRosenCustomKitchens",
+    "3014179333": "DrinkMoreWater",
+    "3014694880": "BraxRoofing",
+    "3014768488": "ChaseRemodeling",
+    "3016630300": "FrederickAirInc",
+    "3017335428": "LarryandSons",
+    "3018610972": "GuardianFireProtection",
+    "3019261462": "StangPlumbing",
+    "3019324925": "SouthernPrideService",
+    "3019532846": "WaterDoctor",
+    "3019903100": "HerronPrinting-OldSite",
+    "3022042423": "HarrisPlumbingHeatingAirandElectrical",
+    "3023368269": "IBP-AccurateInsulationDelaware955",
+    "3028566311": "FHFurrDelaware",
+    "3033133333": "AAAServicePlumbingHeatingandElectric",
+    "3035005685": "IBP-Spec7Insulation955",
+    "3043459000": "AlMarinoInc",
+    "3058507671": "PhixserSolutionsInc",
+    "3059298657": "IBP-Miami955",
+    "3104391212": "PaulDavisWestLosAngeles",
+    "3122489246": "LegacyRestorationLLC",
+    "3132550053": "FireSystemsofMichigan",
+    "3143990856": "ZenWindows-StLouis",
+    "3146567399": "Faszold",
+    "3148455900": "MetroHeatingandCooling",
+    "3154491400": "IsaacHeatingandAirConditioning",
+    "3155883533": "APPlumbing",
+    "3174890825": "IBP-OHDIndy660and661",
+    "3175782882": "AttaBoyPlumbing",
+    "3177835260": "FredAstaireDanceStudio",
+    "3178463237": "FredAstaireDanceStudioCarmel",
+    "3179264328": "NorthernComfortSystems",
+    "3212447500": "Mac5Services",
+    "3213583685": "DelAir",
+    "3252764581": "CopperaPlumbingandCommercialServices",
+    "3306447811": "LakesHeatingandAirConditioning",
+    "3307333711": "SuperiorDrainage",
+    "3307537711": "BlindandSons",
+    "3307641011": "HeartofOhio",
+    "3307848373": "BudsHeatingandCooling",
+    "3302202002": "PaulDavisClevelandW",
+    "3308182630": "ShanklinHeatingandAir",
+    "3367395112": "ComfortFirstHeatingandCooling",
+    "3367852060": "CompleteGroundsCommercialLandscaping",
+    "3523079060": "IBP-Ocala",
+    "3603731700": "RobisonPlumbing",
+    "3525613621": "SunStatePower",
+    "3603866143": "IBP-PacificPartnersNorth955",
+    "3606689540": "FarmersElectricDesignConstruction",
+    "3608231390": "IBP-InsulationContractorsWA",
+    "3614001888": "IBP-ArcticExpressInsulation",
+    "3852473667": "IBP-ChampionGarageDoors",
+    "3863373502": "JacobHeatingandAirConditioning",
+    "4023978100": "ThermalServicesInc",
+    "4024348005": "WilletConstruction",
+    "4024348008": "WilletConstruction",
+    "4029130994": "IBP-CornhuskerInsulation955",
+    "4044672148": "UnitedAirTemp",
+    "4058025405": "PaulDavisSouthwestOklahomaCity",
+    "4066064663": "PaulDavisYellowstoneCounty",
+    "4073357375": "IcebergHomeServices",
+    "4073799300": "IBP-AlphaInsulationandWaterproofing",
+    "4074901292": "DelAir",
+    "4074944910": "DelAir",
+    "4074990774": "DelAir",
+    "4075549293": "UnitedAirTemp",
+    "4076034410": "AmericanAirPlumbingandElectrical",
+    "4077534538": "JanneyRoofing",
+    "4078131266": "GreensEnergy",
+    "4079173759": "GreensEnergy",
+    "4085679955": "IBP-Tri-CountyInsulation",
+    "4097240300": "IBP-AbsoluteInsulation",
+    "4097367665": "HydroBlindSolutions",
+    "4102044713": "FHFurrMaryland",
+    "4102199160": "PaulDavisDelmarva",
+    "4104133549": "UnitedAirTemp",
+    "4104159023": "LerchBrothersLandscapeContractors",
+    "4105254269": "WinnerInsulation",
+    "4105555555": "PaulDavisDelmarvaPPC",
+    "4106050090": "MJMorganGroup",
+    "4107290405": "IBP-RoyalsCommercial",
+    "4107953110": "PotomacViewEnergy",
+    "4108241462": "WaterDoctor",
+    "4109708410": "ChesapeakeLandscapeGroup",
+    "4109786050": "CLEANChoiceCleaningandRestoration",
+    "4122352004": "IBPCentralAluminum",
+    "4126529027": "MarvistaDesignandBuild",
+    "4127871341": "WadeHeatingandCooling",
+    "4132431777": "LePrevostPlumbingHeatingandCooling",
+    "4142590300": "SJJanisCompany",
+    "4144820771": "IBP-AlphaInsulationandWaterproofing",
+    "4194722040": "BluflameServiceCo",
+    "4196624524": "IBP-RoyaltyMooneyandMoses",
+    "4236313804": "KineticElectric",
+    "4238948766": "IBP-Therm-Con",
+    "4239308151": "HometownPlumbing",
+    "4342934556": "AlbemarleHeatingandAir",
+    "4352154127": "IBP-BDI-BigCityInsulationUtah955",
+    "4402344157": "HugeHeatingandCooling",
+    "4402482110": "PKWadsworthHeatingandCooling",
+    "4404244640": "CloverElectric",
+    "4405420735": "TriCountyElectricService",
+    "4405824748": "SalsHeatingandCoolingPlumbingandSewer",
+    "4407292099": "KobellaPlumbingHeatingCooling",
+    "4435480191": "TidewaterCompanies",
+    "4437411129": "PrimePlumbing",
+    "4693251034": "HarrisAirServices",
+    "4698020231": "AaronsElectricalServices",
+    "4698404743": "WillardHeatingandAirConditioning",
+    "4698404750": "WillardHeatingandAirConditioning",
+    "4787428768": "ConditionedAir",
+    "4793962256": "PaulDavisNorthwestArkansas",
+    "4805696903": "IndependentSolar",
+    "4807476800": "PenguinAir",
+    "4807767993": "AirTimeCoolingandHeating",
+    "4809924430": "DesertMountainFireProtection",
+    "4844064485": "TimothyOffHeatingAirConditioningandPlumbing",
+    "5018341655": "BillLeaServices",
+    "5023631117": "Arronco",
+    "5024565982": "TomDrexlerPlumbingAirandElectric",
+    "5025863089": "UNITS",
+    "5028178400": "IBP-EnergySavers",
+    "5029555551": "SalsHeatingandCoolingPlumbingandSewer",
+    "5032201901": "WolfersHomeServices",
+    "5034062900": "HighlandRidgeRemodeling",
+    "5038947661": "IBP-Portland880",
+    "5043212079": "StuartServices",
+    "5058147944": "BellaVistaRemodeling",
+    "5084780088": "AllTempSystems",
+    "5087198747": "IBP-AllInOneMoore955",
+    "5092390890": "IBP-IntermountainWestInsulation",
+    "5093660180": "IBP-IntermountainWestInsulation",
+    "5097358411": "IBP-IntermountainWestInsulation",
+    "5098887010": "IBP-IntermountainWestInsulation",
+    "5099263136": "IBP-IntermountainWestInsulation",
+    "5107924328": "AISHeatingandAirConditioning",
+    "5122124777": "SMAir",
+    "5128378034": "CrowsPlumbingService",
+    "5122826238": "IBP-DougsGarageDoorServices",
+    "5123120826": "IBP-TexasCommercialGlazing",
+    "5123651838": "CopperaPlumbingandCommercialServices",
+    "5125235395": "IBP-HinkleInsulationandDrywall694",
+    "5128737133": "IBP-AlphaInsulationandWaterproofing",
+    "5132789740": "TomDrexlerPlumbingAirandElectric",
+    "5132989302": "TriCountyElectricService",
+    "5133418918": "IBP-MooneyandMosesCincy140",
+    "5133946938": "IBP-OHDCincinnati141",
+    "5133995173": "IBP-MollettGutters140",
+    "5134074424": "SchnellerandKnochelmann",
+    "5134747555": "Arronco",
+    "5135748500": "Sur-Seal",
+    "5136214620": "NationalHeatingandAC",
+    "5138786500": "IBP-AlphaInsulationandWaterproofing",
+    "5138996005": "RicksHeatingandCooling",
+    "5164730202": "UniverseHomeServices",
+    "5167465678": "RebmannPlumbingHeatingandAirConditioning",
+    "5174825501": "HagerFoxHeatingandAirConditioning",
+    "5175485040": "AAAServiceNetwork",
+    "5186501100": "IBP-BuildersAlbany955",
+    "5204854546": "OpenEnclose",
+    "5204952227": "CoolBreezeComfortSolutions",
+    "5302232492": "FoothillFireProtection",
+    "5308263013": "FoothillFireProtection",
+    "5403735876": "RobertBPayneInc",
+    "5406854040": "OstromElectricalPlumbingHeatingandAirConditioning",
+    "5407374650": "IBP-AllProInstalledBuildingProducts955",
+    "5409422700": "BlueMountainPlumbingHeatingandCooling",
+    "5415672348": "IBP-IntermountainWestInsulation",
+    "5593722960": "IBP-BrokenDrumVisalia955",
+    "5612231030": "IBP-WestPalm955",
+    "5616564870": "HopkinsAirConditioning",
+    "5618668750": "UnitedWaterRestorationGroupofSouth Florida",
+    "5618819700": "OHDTreasureCoast",
+    "5702823000": "TESpallandSon",
+    "5706188055": "SOSXtremeComfort",
+    "5714091633": "JordanDesignBuildGroup",
+    "5742530279": "IBP-MikesGarageDoor",
+    "5742951683": "IBP-MomperInsulation",
+    "5742956844": "ChurchPlumbingandHeating",
+    "5855102336": "APPlumbing",
+    "5852263800": "IsaacHeatingandAirConditioning",
+    "5853949000": "IsaacHeatingandAirConditioning",
+    "5855466500": "IsaacHeatingandAirConditioning",
+    "5855461400": "IsaacHeatingandAirConditioning",
+    "5857664702": "LonLockwoodElectric",
+    "5865000979": "UNITS",
+    "5868683234": "BrickworksPropertyRestoration",
+    "5869449400": "DetroitFurnace",
+    "6022737283": "RescueOneAirHeatingandCooling",
+    "6025275858": "IBP-MarshallInsulation",
+    "6026168419": "RedBirdRoofing",
+    "6027107981": "BumbleBeePlumbing",
+    "6027873956": "DonleyACandPlumbing",
+    "6032242280": "IBP-OHDConcord",
+    "6033570373": "IBP-BuildersInstalledProductsVT",
+    "6036684411": "IBP-BuildersInstalledProductsNH",
+    "6037631344": "ForemostBuilders",
+    "6037694938": "BlackdogDesignBuildRemodel",
+    "6039523192": "BlackdogDesignBuildRemodel",
+    "6075627355": "IsaacHeatingandAirConditioning",
+    "6077544235": "ArcticBearPlumbingHeatingAirandWaterTreatment",
+    "6098453460": "RaynorServices",
+    "6086612843": "AvidPlumbing",
+    "6088373638": "ActionPlumbing_Heating_AirConditioningandElectric_Inc",
+    "6088387300": "AllComfortServices",
+    "6092961159": "IBP-EasternContractorServices",
+    "6093932222": "IBPCentralAluminum",
+    "6096461600": "Confires",
+    "6102580201": "EdwinStipe",
+    "6103645099": "JDVElectric",
+    "6104008510": "MattioniPlumbingHeatingandCooling",
+    "6104327001": "ElekPlumbing",
+    "6107388310": "SignatureHVAC",
+    "6109189344": "PrecisionAirHC",
+    "6127214153": "BrattTreeCompany",
+    "6142545309": "IBP-EdwardsMooneyandMoses955",
+    "6143089900": "IBP-SwanFreedom955",
+    "6147688000": "ApexPlumbingHeatingandAirPros",
+    "6148585282": "IBPInterstateInsulation",
+    "6152771000": "IBP-AlphaInsulationandWaterproofing",
+    "6153559137": "ParkersHeatingandCooling",
+    "6156495481": "IBP-Nashville955",
+    "6158868809": "MichaelsPlumbingService",
+    "6159420439": "MJMorganGroup",
+    "6164531099": "GrapidsHomeServices",
+    "6164587304": "SchaafsmaHeatingandCooling",
+    "6166475514": "PaulDavisWestMichigan",
+    "6168711900": "ServiceProfessor",
+    "6168887663": "SchoenherrRoofing",
+    "6192693013": "GuthrieandSonsHeatingAirandSolar",
+    "6234323930": "IBP-AlphaInsulationandWaterproofing",
+    "6303690500": "TheKitchenMaster",
+    "6304440860": "BlueFrostHeatingandCooling",
+    "6313093077": "UNITS",
+    "6317509075": "IBP-RocketInsulation",
+    "6514639333": "IBP-InstalledBuildingSolutions",
+    "6613100884": "PaulDavisSantaClarita",
+    "6613807319": "IBP-KernDoor",
+    "6614898263": "IBP-BDIInsulationWholesaleSupply",
+    "6615205121": "IBP-BrokenDrumInsulationofBakersfield955",
+    "6783792665": "ClarksHeatingandAir",
+    "6789042337": "AnytimeHeatingCoolingandPlumbing",
+    "6812191629": "ForgeHeatingandCooling",
+    "6827864561": "CopperaPlumbingandCommercialServices",
+    "6828411788": "PaulDavisFortWorth",
+    "7032911926": "JohnNugentandSons",
+    "7033610816": "TurnersServiceCo",
+    "7034710451": "BowmansPlumbingHeatingAirConditioningandElectricalInc",
+    "7035404838": "FHFurrDMV",
+    "7035805325": "HomeServiceDoctors",
+    "7035903700": "CBLucas",
+    "7036414790": "WheatsLandscape",
+    "7037052005": "MJMorganGroup",
+    "7037549551": "ColonialContracting",
+    "7038300863": "BeyondExteriors",
+    "7038366775": "CaffiServices",
+    "7038898899": "GeorgetownMoving",
+    "7043024782": "IBP-Savannah",
+    "7043310544": "JimDickersonCompany",
+    "7043982300": "IBP-AlphaInsulationandWaterproofing",
+    "7044391350": "MathesonLawFirm",
+    "7044925311": "RoadHaugsMovingandStorage",
+    "7045944107": "PSIControlSolutions",
+    "7045968200": "ParksHeatingCoolingPlumbingandElectrical",
+    "7048654251": "ReliableFireandSafety",
+    "7048795222": "CLTHomeSolutions",
+    "7048827738": "DiFabionRemodeling",
+    "7048925843": "UltimatePlumbing",
+    "7049937696": "DeckPlus",
+    "7072062622": "FoothillFireProtection",
+    "7072857037": "SimplySolar",
+    "7082679262": "LivCo",
+    "7084033434": "ComfortZoneService",
+    "7123283157": "PetersLawFirm",
+    "7135261491": "VillagePlumbingandAir",
+    "7138931090": "KauffmanCo",
+    "7147233864": "PaulDavisHuntingtonBeach",
+    "7157493162": "CandTSidingandWindows",
+    "7158040947": "FrasiersPlumbingHeatingandCooling",
+    "7165258910": "IBP-TownBuildingSystems955",
+    "7166851400": "IsaacHeatingandAirConditioning",
+    "7172048120": "HallerEnterprise",
+    "7172078198": "LancasterPlumbingHeatingCoolingandElectrical",
+    "7173543737": "ZimmermansRoofing",
+    "7173559675": "IddingsElectric",
+    "7176251000": "NeffsvillePlumbingandHeating",
+    "7177150737": "MJMorganGroup",
+    "7178982710": "IBPCentralAluminum",
+    "7195446670": "RBuck",
+    "7205438661": "IBP-AlphaInsulationandWaterproofing",
+    "7206694188": "AbsoluteElectricalHeatingandAir",
+    "7244179550": "BVSMHeatingandAirConditioning",
+    "7259000782": "UNITS",
+    "7323690400": "BinskyHomeService",
+    "7343423420": "IcebergHeatingandCooling",
+    "7344556500": "ColonialHeatingandCooling",
+    "7346630204": "KochandWhiteHeatingandCooling",
+    "7346659860": "IndoorComfort",
+    "7578280024": "IBP-TidewaterInsulators955",
+    "7604225680": "AllSeasonsAirConditioningPlumbingandHeating",
+    "7608135583": "IBP-AppleValleyInsulation955",
+    "7632778422": "LegacyRestorationLLC",
+    "7634008616": "IBP-MetroHomeInsulation435",
+    "7634412313": "IBPMidwestWholesaleDoors",
+    "7635154852": "DeansHomeServices",
+    "7652152932": "IBP-OHDIndy660and661",
+    "7652849921": "NorthernComfortSystems",
+    "7655871444": "IBP-OHDMuncie",
+    "7657242228": "NorthernComfortSystems",
+    "7704248600": "IBP-AlphaInsulationandWaterproofing",
+    "7707964848": "PaulDavisNorthAtlanta",
+    "7739303451": "GoodePlumbing",
+    "7817691515": "SuburbanHVAC",
+    "7853291119": "UNITS",
+    "7853294339": "UNITS",
+    "7866559165": "UNITS",
+    "8002794822": "ComfortFirstHeatingandCooling",
+    "8003610888": "RobinAireServiceCompany",
+    "8003708751": "QualityWindowandDoor",
+    "8004534394": "CityFireSafety",
+    "8006347704": "RWMCasters",
+    "8006924513": "IBP-BlindAmbitions",
+    "8006964690": "BlueCoronaBrandedMarketing",
+    "8007079278": "IBP-OJInsulation872_874",
+    "8007883934": "AlertCommunications",
+    "8007995684": "WaterBoy",
+    "8008362535": "IBP-ThermasealLakeside955",
+    "8009551976": "WinnerInsulation",
+    "8009682871": "FirePros",
+    "8013554433": "WhippleServiceChampions",
+    "8014673951": "NeeringsPlumbingHeatingAirandElectric",
+    "8014921200": "IBP-PremierBuildingSupply",
+    "8017263329": "SameDayHeatingandAir",
+    "8018955774": "AllHoursPlumbingHeatingandCooling",
+    "8024484752": "IBP-OHDBurlington",
+    "8026551800": "FiretechSprinklerCorp",
+    "8032002921": "IBP-GTGInc955",
+    "8039391470": "GeneratorServicesInc",
+    "8053323480": "IBP-Tri-CountyInsulation",
+    "8054800327": "AladdinAC",
+    "8108444178": "DominionServiceCompany",
+    "8122350710": "NorthernComfortSystems",
+    "8123728011": "ReliableComfort",
+    "8132108319": "IBP-AlphaInsulationandWaterproofing",
+    "8132805007": "IBP-Tampa955",
+    "8133362271": "DelAir",
+    "8134864038": "AllAmericanHomeServices",
+    "8148383600": "NerthlingsHeatingandAirConditioning",
+    "8138716610": "HawkinsServiceCompany",
+    "8139294295": "AirHawkHeatingandCooling",
+    "8142393473": "LibertyFireSolutions",
+    "8135309061": "AcreePlumbingAirandElectric",
+    "8152545127": "AirMaxxHeatingandAirConditioning",
+    "8157812567": "DuaneBlantonPlumbingSewerHeatingandCooling",
+    "8164361244": "BucknersHeatingandCooling",
+    "8166015621": "FirstMateHeatingandCooling",
+    "8172903525": "WillardHeatingandAirConditioning",
+    "8174318929": "LeakGeeksPlumbing",
+    "8175911225": "AirCo",
+    "8188133316": "PaulDavisSanFernandoValley",
+    "8189915684": "AladdinAC",
+    "8286519696": "IBP-R-ProSelect",
+    "8282012184": "RobyServices",
+    "8288917040": "IBP-PisgahInsulation",
+    "8314752205": "IBP-Tri-CountyInsulation",
+    "8327912935": "AaronsElectricalServices",
+    "8328769498": "MercyPlumbing",
+    "8332222953": "GEMPlumbingHeating",
+    "8332282481": "FHFurrRichmond",
+    "8332324328": "A+Derr",
+    "8336569675": "MJMorganGroup",
+    "8432369633": "ExtraRoomSelfStorage",
+    "8433474233": "IBP-TCIMyrtleBeach",
+    "8435017655": "ExtraRoomSelfStorage",
+    "8437610205": "ExtraRoomSelfStorage",
+    "8437791639": "IBP-TCICharleston955",
+    "8439955058": "PaulDavisGreaterMyrtleBeach",
+    "844-HVAC-365": "VredevoogdHeatingCooling",
+    "8444822365": "VredevoogdHeatingCooling",
+    "8448440314": "ServiceToday",
+    "8453514700": "SOSXtremeComfort",
+    "8454858343": "DBSRemodel",
+    "8473674492": "CahillHeatingAirConditioningandElectric",
+    "8478244336": "HomeComfortServicesInc",
+    "8479994595": "AmericanVintageHome",
+    "8504623241": "IBP-PanhandleandACEInsulation955",
+    "8506859709": "IBP-GulfCoastInsulation",
+    "8563735429": "InstantServices",
+    "8566996431": "UNITS",
+    "8569358888": "HarrisPlumbingHeatingAirandElectrical",
+    "8589874636": "PaulDavisNorthCountySanDiego",
+    "8592520403": "Arronco",
+    "8593534933": "IBP-Lexington955",
+    "8594882939": "IBP-MandDInsulation",
+    "8595256407": "Arronco",
+    "8597571877": "SchnellerandKnochelmann",
+    "8608513550": "UNITS",
+    "8632231849": "IcebergHomeServices",
+    "8637330075": "TopFlightElectric",
+    "8642810141": "AuthorizedHeatingandAir",
+    "8646636280": "IBP-BlueRidgeBuildingProducts955",
+    "8647120439": "RobyServices",
+    "8655833957": "PipeWrenchPlumbingHeatingandCooling",
+    "8655884464": "IBP-CFIInsulation",
+    "8662383243": "HoffmanElectrical",
+    "8662611090": "IBP-AlpineInsulation",
+    "8663462009": "SoleraEnergy",
+    "8664328828": "UnitedAirTemp",
+    "8664467858": "IBP-EasternContractorServices",
+    "8665115540": "UnifourFireandSafety",
+    "8668073639": "SolarLiberty",
+    "8668244328": "MastersHeatingandCooling",
+    "8668367663": "SandKRoofing",
+    "8669647946": "SunPoolsInc",
+    "8772031480": "BlueCoronaBrandedMarketing",
+    "8772871179": "KolbElectric",
+    "8774704263": "IBP-AMDDistribution",
+    "8776852626": "CorporateTechnologySolutions",
+    "8777983904": "BensHomeServices",
+    "8778882780": "IBP-ExpertInsulation",
+    "8779301213": "BlueCoronaBrandedMarketing",
+    "8779642233": "RYNOStrategicSolutions",
+    "8882280917": "Confires",
+    "8882449840": "PaulDavis-Corporate-USA",
+    "8883150923": "IBP-B-OrganizedInsulationAndSpecialtyProducts955",
+    "8883307543": "IBP-MomperInsulation",
+    "8883317854": "OncourseHomeSolutions",
+    "8883717242": "DandDGarageDoors",
+    "8883970988": "IBP-MIGBuildingSystems355",
+    "8884226899": "GreenAirCare",
+    "8884996665": "IBP-MAPInsulation955",
+    "8885243799": "Nexa",
+    "8885573489": "Nexa",
+    "8888312665": "DelAir",
+    "8888884663": "HomeParamountPestControl",
+    "8889073090": "IBP-Charleston",
+    "9013210636": "IBP-Memphis955",
+    "9037586482": "NappsCoolingHeatingandPlumbing",
+    "9045155341": "IBP-Jacksonville955",
+    "9047640040": "JandWHeatingandAir",
+    "9047973397": "IBP-AdvancedInsulation",
+    "9048521708": "DelAir",
+    "9049808769": "UnitedAirTemp",
+    "9077453865": "FalconAlaska",
+    "9086332333": "PaulDavisMid-CentralNJ",
+    "9103352574": "UNITS",
+    "9105376859": "ComfortFirstHeatingandCooling",
+    "9106028587": "NCQualityAir",
+    "9108222866": "BlantonsAirPlumbingandElectric",
+    "9122259562": "IBP-LovedayandCompany955",
+    "9125972458": "CanadysHeatingAirPlumbing",
+    "9133062058": "EverestHeatingandCoolingPlumbingandRooter",
+    "9133833100": "ABMay",
+    "9138565801": "SantaFeAirConditioningandHeating",
+    "9134323342": "PolestarPlumbing",
+    "9146686461": "YostandCampbellHeatingCoolingandGenerators",
+    "9162298445": "IBP-GoldStarInsulation870",
+    "9166633582": "FoothillFireProtection",
+    "9185052120": "AllSeasonsAirConditioningPlumbingandHeating",
+    "9185180750": "IBP-Tulsa688",
+    "9185249944": "IBP-AlphaInsulationandWaterproofing",
+    "9192982105": "BlantonsAirPlumbingandElectric",
+    "9193837000": "JDServiceNow",
+    "9194240609": "IBP-AlphaInsulationandWaterproofing",
+    "9194596300": "BlockandAssociatesRealty",
+    "9194754027": "GreenHillContracting",
+    "9194802727": "AirExperts",
+    "9196354349": "ComfortFirstHeatingandCooling",
+    "9198907789": "RaleighHeatingandAir",
+    "9199715119": "CQCHome",
+    "9203933187": "IBP-BayThermOneida955",
+    "9252096164": "FoothillFireProtection",
+    "9254432665": "EagleAirConditioning",
+    "9288554446": "HavasuSolar",
+    "9402462075": "StrittmatterPlumbingHeatingandAC",
+    "9412252182": "ABCPlumbingSouthwest",
+    "9412195623": "DelAir",
+    "9412784698": "GrandeAireServicesIncMain",
+    "9413482000": "BullseyeHomeServices",
+    "9416974884": "GrandeAireServicesInc",
+    "9493058059": "BrandguardVents",
+    "9529331868": "4FrontEnergy",
+    "9529858088": "IBP-HorizonElectricCompany",
+    "9543150790": "IBP-AlphaInsulationandWaterproofing",
+    "9545329510": "PlumbingTroopers",
+    "9702418871": "IBP-AccurateInsulationColorado955",
+    "9708882294": "PaulDavisFortCollins",
+    "9709899815": "IBP-InsulVail955",
+    "9722793400": "MHCAirServices",
+    "9724462600": "IBP-AlphaInsulationandWaterproofing",
+    "9725649785": "WillardHeatingandAirConditioning",
+    "9727276364": "OBryanPlumbingServices",
+    "9728810020": "TotalAir",
+    "9729132881": "FrymireHomeServices",
+    "9733619505": "IBP-EasternContractorServices",
+    "9733666694": "Confires",
+    "9733452700": "IBPCentralAluminum",
+    "9738278179": "SOSXtremeComfort",
+    "9738871334": "RussoBrosandCo",
+    "9787506900": "CranneyHomeServices",
+    "9802063787": "VivaElectric",
+    "9802210004": "IBPCentralAluminum",
+    "9803080200": "RobyServices",
+    "9803393293": "IBP-PrimeEnergyGroupCharlotte",
+    "9804492978": "ComfortFirstHeatingandCooling",
+    "9842729712": "OdysseyContracting",
+    "9853705400": "AllstateConstructionRoofing",
+};
+
+var mergedNumbers = Invoca.PNAPI.extend({}, customNumberToReplace, options.numberToReplace);
+options.numberToReplace = mergedNumbers;
+
+//Capture IP Address for MDF Field
+var ipAddress;
+Invoca.Client.getIPAddress = function () {
+    try { 
+        fetch('https://api.ipify.org?format=json')
+        .then((response) => response.json())
+        .then((data) => {
+            ipAddress = data.ip;
+        })
+    } catch (error) {
+        console.log('Error message: ', error);
+    }
+    var ipValue = (ipAddress === undefined) ? "": `${ipAddress}`;
+    return ipValue;
+};
+
+Invoca.Client.getUrlValue = function (key) {
+    return Invoca.Tools.readUrl(key) || Invoca.Tools.readInvocaData(key);
+};
+
+Invoca.Client.isPaidParamAndValue = function (param, value) {
+    return Invoca.Client.getUrlValue(param) === value;
+}
+ 
+function buildMediumSource() {
+    var referralDomain = Invoca.Tools.parseDomainFromFullUrl(Invoca.referrer).slice(1);
+    var currentDomain  = Invoca.Tools.parseDomainFromFullUrl(location.href).slice(1);
+   
+    if (Invoca.Tools.readUrl("gclid") || Invoca.Client.isPaidParamAndValue("st-t", "gpt") || Invoca.Tools.readUrl("gbraid") || Invoca.Tools.readUrl("wbraid")) {
+        return ["cpc", "google"];
+    } else if (Invoca.Tools.readUrl("msclkid") || Invoca.Client.isPaidParamAndValue("st-t", "bpt")) {
+        return ["cpc", "bing"];
+    } else if (referralDomain !== currentDomain) {
+        return Invoca.Tools.parseReferrer({
+             "google.com"                            : ["organic", "google.com"],
+            "bing.com"                              : ["organic", "bing.com"],
+            "yahoo.com"                             : ["organic", "yahoo.com"],
+            "duckduckgo.com"                        : ["organic", "duckduckgo.com"],
+            "ecosia.org"                            : ["organic", "ecosia.org"],
+            "ask.com"                               : ["organic", "ask.com"],
+            "aol.com"                               : ["organic", "aol.com"],
+            "baidu.com"                             : ["organic", "baidu.com"],
+            "yandex.com"                            : ["organic", "yandex.com"],
+            "qwant.com"                             : ["organic", "qwant.com"],
+            "startpage.com"                         : ["organic", "startpage.com"],
+            "xfinity.com"                           : ["organic", "xfinity.com"],
+            "search.pch.com"                        : ["organic", "search.pch.com"],
+            "search.earthlink.com"                  : ["organic", "search.earthlink.com"],
+            "brave.com"                             : ["organic", "brave.com"],
+            "yelp.com"                              : ["referral", "yelp"],
+            "acdoctor.com"                          : ["referral","acdoctor.com"],
+            "allcountyfuel.com"                     : ["referral","allcountyfuel.com"],
+            "allenonline.com"                       : ["referral","allenonline.com"],
+            "amana.com"                             : ["referral","amana.com"],
+            "amazon.com"                            : ["referral","amazon.com"],
+            "angi.com"                              : ["referral","angi.com"],
+            "angieslist.com"                        : ["referral","angieslist.com"],
+            "bbb.org"                               : ["referral","bbb.org"],
+            "bluecoronasearch.com"                  : ["referral","bluecoronasearch.com"],
+            "carrier.com"                           : ["referral","carrier.com"],
+            "ci.richland.wa.us"                     : ["referral","ci.richland.wa.us"],
+            "claimspages.com"                       : ["referral","claimspages.com"],
+            "contractorfinder.bradfordwhite.com"    : ["referral","contractorfinder.bradfordwhite.com"],
+            "expertise.com"                         : ["referral","expertise.com"],
+            "facebook.com"                          : ["referral","facebook"],
+            "garagedoorrepair.com"                  : ["referral","garagedoorrepair.com"],
+            "goodmanmfg.com"                        : ["referral","goodmanmfg.com"],
+            "greensenergyservices.com"              : ["referral","greensenergyservices.com"],
+            "groupon.com"                           : ["referral","groupon.com"],
+            "herniasurgeryflorida.com"              : ["referral","herniasurgeryflorida.com"],
+            "herrongoesgreen.com"                   : ["referral","herrongoesgreen.com"],
+            "herronprint.com"                       : ["referral","herronprint.com"],
+            "homeadvisor.com"                       : ["referral","homeadvisor.com"],
+            "homes.com"                             : ["referral","homes.com"],
+            "houzz.com"                             : ["referral","houzz"],
+            "iheart.com"                            : ["referral","iheart.com"],
+            "instagram.com"                         : ["referral","instagram"],
+            "jeffslist.com"                         : ["referral","jeffslist.com"],
+            "linkedin.com"                          : ["referral","linkedin"],
+            "lnkd.in"                               : ["referral","lnkd.in"],
+            "lowcostherniasurgery.com"              : ["referral","lowcostherniasurgery.com"],
+            "madison.com"                           : ["referral","madison.com"],
+            "marylandinfo.com"                      : ["referral","marylandinfo.com"],
+            "mathersmechanical.com"                 : ["referral","mathersmechanical.com"],
+            "midatlanticcomfort.com"                : ["referral","midatlanticcomfort.com"],
+            "myhvacprice.com"                       : ["referral","myhvacprice.com"],
+            "mysafeflhome.com"                      : ["referral","mysafeflhome.com"],
+            "narimetrodc.org"                       : ["referral","narimetrodc.org"],
+            "naylornetwork.com"                     : ["referral","naylornetwork.com"],
+            "newhomes124.com"                       : ["referral","newhomes124.com"],
+            "nextdoor.com"                          : ["referral","nextdoor"],
+            "noinsuranceherniasurgery.com"          : ["referral","noinsuranceherniasurgery.com"],
+            "pandora.com"                           : ["referral","pandora.com"],
+            "pinkpageseast.com"                     : ["referral","pinkpageseast.com"],
+            "pinterest.com"                         : ["referral","pinterest"],
+            "realestatetipsandtrends.com"           : ["referral","realestatetipsandtrends.com"],
+            "rosenkitchens.com"                     : ["referral","rosenkitchens.com"],
+            "servicealley.com"                      : ["referral","servicealley.com"],
+            "supermedia.com"                        : ["referral","supermedia.com"],
+            "superpages.com"                        : ["referral","superpages.com"],
+            "t.co"                                  : ["referral","t.co"],
+            "thebluebook.com"                       : ["referral","thebluebook.com"],
+            "thewindowdog.com"                      : ["referral","thewindowdog.com"],
+            "thryv.com"                             : ["referral","thryv.com"],
+            "thumbtack.com"                         : ["referral","thumbtack.com"],
+            "tiktok.com"                            : ["referral","tiktok.com"],
+            "topseos.com"                           : ["referral","topseos.com"],
+            "toyoursuccess.com"                     : ["referral","toyoursuccess.com"],
+            "traditionalwindowanddoor.com"          : ["referral","traditionalwindowanddoor.com"],
+            "twitter.com"                           : ["referral","twitter.com"],
+            "urbanplacecary.com"                    : ["referral","urbanplacecary.com"],
+            "valpak.com"                            : ["referral","valpak.com"],
+            "washingtonpost.com"                    : ["referral","washingtonpost.com"],
+            "weddingwaterbottles.com"               : ["referral","weddingwaterbottles.com"],
+            "whatsupmag.com"                        : ["referral","whatsupmag.com"],
+            "whec.com"                              : ["referral","whec.com"],
+            "woodlandsonline.com"                   : ["referral","woodlandsonline.com"],
+            "wtop.com"                              : ["referral","wtop.com"],
+            "yellowbook.com"                        : ["referral","yellowbook.com"],
+            "yellowpages.com"                       : ["referral","yellowpages.com"],
+            "ynn.com"                               : ["referral","ynn.com"],
+            "youtube.com"                           : ["referral","youtube.com"],
+            "yp.com"                                : ["referral","yp.com"],
+            "ehlersheatcool.com"                    : ["referral","ehlersheatcool.com"],
+            "southbmore.com"                        : ["referral","southbmore.com"],
+            ""                                      : ["(none)", "(direct)"]
+        },  ["other referral", referralDomain], null, "topLevelDomain");
+    } else {
+        return [Invoca.Tools.readInvocaData("utm_medium"), Invoca.Tools.readInvocaData("utm_source")];
+    }
+};
+  
+// Identify & Attribute the utm_medium Media Channel and utm_source. Pick first item in array for medium and second item in array for source.
+options.poolParams = {
+  utm_medium: Invoca.Tools.readUrl("utm_medium") || buildMediumSource()[0],
+  utm_source: Invoca.Tools.readUrl("utm_source") || buildMediumSource()[1]
+};
+
+//Allows for flexibility if parameter _bct or bct is used
+Invoca.Client.getBCT = function () {
+    return Invoca.Client.getUrlValue("_bct") || Invoca.Client.getUrlValue("bct")
+};
+
+
+//CONTROLS HIERARCHY OF LOOKUP TABLE ROUTING AND ATTRIBUTION
+var PARAM_LIST = ["bct", "_bct", "_vsrefdom", "st-t", "cpc", "utm_campaign", "utm_source", "utm_medium"];
+var UTM_MEDIUM = options.poolParams.utm_medium;
+var UTM_SOURCE = options.poolParams.utm_source;
+
+Invoca.Client.isValidSource = function (source) { 
+	return SOURCE_VALUES.some(function (el) { 
+		return source === el;
+	});
+};
+
+Invoca.Client.isValidCampaign = function (campaign) { 
+    if (!campaign) return null;
+	return CAMPAIGN_VALUES.some(function (el) { 
+        var formattedCampaign = campaign.toLowerCase();
+		return formattedCampaign.indexOf(el) > -1;
+	});
+};
+
+Invoca.Client.checkMediumData = function(data) {
+    return UTM_MEDIUM === data;
+};
+
+Invoca.Client.checkParamList = function() {
+	var data = "";
+	for (const param of PARAM_LIST) { 
+        var key = param;
+	  	var urlValue = Invoca.Client.getUrlValue(param);
+
+    	if (param === "cpc" && Invoca.Client.checkMediumData(param)) {
+            key = "utm_source";
+            urlValue = UTM_SOURCE;  
+    	} else if  (param === "utm_campaign" && !Invoca.Client.isValidCampaign(urlValue)) {
+            urlValue = "";
+    	} else if (param === "utm_source" && !Invoca.Client.isValidSource(urlValue)) {
+    		urlValue = "";
+    	} else if (param === "utm_medium"){
+    	    key = UTM_MEDIUM === "other referral" ? "utm_medium": "utm_source";
+    	    urlValue = UTM_MEDIUM === "other referral" ? UTM_MEDIUM : UTM_SOURCE;
+    	}; 
+		
+		if (urlValue) {
+			data = `${key.toLowerCase()}=${urlValue.toLowerCase()}`; 
+			break;
+		};
+	};
+	return data;
+};
+
+//CONTROLS HIERARCHY OF LOOKUP TABLE ROUTING AND ATTRIBUTION
+//1. bct, 2. vsrefdom, 3. st-t, 4. utm_medium = cpc 5. utm_campaign 6. utm_source (specific values) 7. referral values (utm_source from table) 8. Fallback to utm_medium (direct, organic, Other Referral)
+Invoca.Client.getParameterLookupKey = function () {
+    return Invoca.Client.checkParamList();
+} 
+
+//Dynamically capture the GA4 Session ID. Assumes only one cookie that starts with "_ga_" and value always starts with "GS1".
+Invoca.Client.getGASessionID = function(){
+var regex = /^_ga_.*/;
+var cookies = document.cookie.split('; ');
+for (var i = 0; i < cookies.length; i++){
+    if (regex.test(cookies[i])){
+        if (cookies[i].split('=')[1].substring(0,3) == 'GS1'){
+        	return cookies[i].split('=')[1];
+            }
+	    }
+      }     
+}
+  
+return options;
+  };
+
+  return true;
+})();
+
+var generatedOptions = {
+  active:              true,
+  autoSwap:            false,
+  cookieDays:          cacheLifetimeDays,
+  country:             null,
+  dataSilo:            "us",
+  defaultCampaignId:   defaultCampaignId,
+  destinationSettings: destinationSettings,
+  disableUrlParams:    ['utm_medium','utm_source'],
+  doNotSwap:           [],
+  integrations:        automaticIntegrations,
+  maxWaitFor:          waitFor,
+  networkId:           networkId || null,
+  numberToReplace:     numbersToReplace,
+  organicSources:      organicSources,
+  poolParams:          {},
+  reRunAfter:          reRunAfter,
+  requiredParams:      requiredParams,
+  resetCacheOn:        resetCacheOn,
+  waitForData:         customDataWaitForConfig,
+  waitForDataAnonymousFunctions:  customDataWaitForConfigAnonymousFunctions
+};
+
+Invoca.Client.startFromWizard(generatedOptions);
+
+})(2070);
